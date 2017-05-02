@@ -50,14 +50,14 @@ namespace WebCrawler.TrackingService.Tests
         }
 
         [Fact]
-        public void Should_get_config()
+        public void Should_read_from_the_fucking_app_config()
         {
-            var section = ConfigurationManager.GetSection("akka");
-            Assert.NotNull(section);
+            var config = TrackerServiceFactory.GetSomethingFromAppConfig();
+            config.Should().NotBeNull();
         }
     }
 
-    internal static class MockHttpClientHandlerExetnsions
+    internal static class MockHttpClientHandlerExtensions
     {
         public static void SetupGetStringAsync(this Mock<HttpClientHandler> mockHandler, Uri requestUri, string response)
         {
