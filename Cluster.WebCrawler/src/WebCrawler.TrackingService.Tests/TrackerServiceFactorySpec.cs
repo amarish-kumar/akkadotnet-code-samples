@@ -42,18 +42,31 @@ namespace WebCrawler.TrackingService.Tests
             Mock<HttpClientHandler> mockHandler = new Mock<HttpClientHandler>();
             var selfIpAddressUri = new Uri("http://172.22.144.2:9000/api/whatsmyip");
 
-            mockHandler.SetupGetStringAsync(selfIpAddressUri, "172.22.144.3");
+            mockHandler.SetupGetStringAsync(selfIpAddressUri, "\"\\\"http://172.22.144.1:30285\\\"\"");
             HttpClient client = new HttpClient(mockHandler.Object);
 
             var selfIpResponse = TrackerServiceFactory.GetSelfIpAddress(client, selfIpAddressUri);
-            _output.WriteLine(selfIpResponse);
+            selfIpResponse.Should().Be("http://172.22.144.3:12345");
         }
 
         [Fact]
-        public void Should_read_from_the_fucking_app_config()
+        public void Should_create_valid_hocon_replacements()
         {
-            var config = TrackerServiceFactory.GetSomethingFromAppConfig();
-            config.Should().NotBeNull();
+            var selfIpAddress = "http://172.22.144.3:12345";
+
+            var remoteConfig = TrackerServiceFactory.CreateRemoteConfig(selfIpAddress);
+            remoteConfig.ToString().Should().Be(@"{
+  akka : {
+    remote : {
+      helios : {
+        tcp : {
+          public-hostname : 172.22.144.3
+          port : 12345
+        }
+      }
+    }
+  }
+}");
         }
     }
 

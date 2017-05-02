@@ -14,7 +14,7 @@ namespace WebCrawler.TrackingService
 
         public bool Start(HostControl hostControl)
         {
-            ClusterSystem = ActorSystem.Create("webcrawler");
+            ClusterSystem = TrackerServiceFactory.LaunchTrackingService("webcrawler");
             ApiMaster = ClusterSystem.ActorOf(Props.Create(() => new ApiMaster()), "api");
             DownloadMaster = ClusterSystem.ActorOf(Props.Create(() => new DownloadsMaster()), "downloads");
             //ApiMaster.Tell(new StartJob(new CrawlJob(new Uri("http://www.rottentomatoes.com/", UriKind.Absolute), true), ghettoConsoleActor));

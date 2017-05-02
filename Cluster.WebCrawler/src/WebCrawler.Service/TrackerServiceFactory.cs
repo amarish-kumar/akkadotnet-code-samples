@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Akka.Actor;
 using Akka.Configuration;
 using Akka.Configuration.Hocon;
 
@@ -13,7 +14,7 @@ namespace WebCrawler.TrackingService
 {
     public static class TrackerServiceFactory
     {
-        public static Uri GetSelfIpDiscoveryUri(Config config)
+        internal static Uri GetSelfIpDiscoveryUri(Config config)
         {
             var seedNodes = config.GetStringList("akka.cluster.seed-nodes");
             Uri seedNodeUri;
@@ -23,10 +24,46 @@ namespace WebCrawler.TrackingService
             return seedNodeHttpUri.Uri;
         }
 
-        public static string GetSelfIpAddress(HttpClient client, Uri selfIpDiscoveryUri)
+        internal static string GetSelfIpAddress(HttpClient client, Uri selfIpDiscoveryUri)
         {
             var response = client.GetAsync(selfIpDiscoveryUri).Result;
             return response.Content.ReadAsStringAsync().Result;
+        }
+
+        internal static Config CreateRemoteConfig(string selfIpAddress)
+        {
+            Uri selfAddressUri;
+            Uri.TryCreate(selfIpAddress, UriKind.Absolute, out selfAddressUri);
+            var selfIp = selfAddressUri.Host;
+            var selfPort = selfAddressUri.Port;
+
+            var remoteConfig =
+                ConfigurationFactory.ParseString($@"akka.remote.helios.tcp.public-hostname = ""{selfIp}""
+                                                 akka.remote.helios.tcp.port = {selfPort}");
+            return remoteConfig;
+        }
+
+        internal static Config CreateConfig()
+        {
+            var section = (AkkaConfigurationSection)ConfigurationManager.GetSection("akka");
+            var config = section.AkkaConfig;
+
+            var selfIpDiscoveryUri = GetSelfIpDiscoveryUri(config);
+            string selfIpAddress;
+            using (var client = new HttpClient())
+            {
+                selfIpAddress = GetSelfIpAddress(client, selfIpDiscoveryUri);
+            }
+
+            var remoteConfig = CreateRemoteConfig(selfIpAddress);
+            var finalConfig = remoteConfig.WithFallback(config);
+            return finalConfig;
+        }
+
+        public static ActorSystem LaunchTrackingService(string systemName)
+        {
+            var config = CreateConfig();
+            return ActorSystem.Create(systemName, config);
         }
     }
 }
