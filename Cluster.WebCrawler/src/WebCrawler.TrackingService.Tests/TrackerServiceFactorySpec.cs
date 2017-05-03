@@ -42,7 +42,7 @@ namespace WebCrawler.TrackingService.Tests
             Mock<HttpClientHandler> mockHandler = new Mock<HttpClientHandler>();
             var selfIpAddressUri = new Uri("http://172.22.144.2:9000/api/whatsmyip");
 
-            mockHandler.SetupGetStringAsync(selfIpAddressUri, "\"\\\"http://172.22.144.1:30285\\\"\"");
+            mockHandler.SetupGetStringAsync(selfIpAddressUri, "http://172.22.144.3:12345");
             HttpClient client = new HttpClient(mockHandler.Object);
 
             var selfIpResponse = TrackerServiceFactory.GetSelfIpAddress(client, selfIpAddressUri);

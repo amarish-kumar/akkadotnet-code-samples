@@ -7,7 +7,7 @@ namespace WebCrawler.CrawlService
     {
         public bool Start(HostControl hostControl)
         {
-            ClusterSystem = ActorSystem.Create("webcrawler");
+            ClusterSystem = CrawlServiceFactory.LaunchTrackingService("webcrawler");
             return true;
         }
 
