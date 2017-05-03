@@ -11,10 +11,22 @@ services:
     image: nickc/trackingservice:latest
     container_name: trackingservice
     stdin_open: true
+    depends_on:
+      - "lighthouse"
   crawlservice:
     image: nickc/crawlservice:latest
-	container_name: crawlservice_1
-	stdin_open: true
+    container_name: crawlservice_1
+    stdin_open: true
+    depends_on: 
+      - "trackingservice"
+  web:
+    image: nickc/webcrawlerweb:latest
+    container_name: web
+    depends_on:
+      - "crawlservice"
+    networks:
+      default:
+        ipv4_address: 172.22.144.3
 networks:
   default:
     external:
