@@ -1,0 +1,21 @@
+version: "3"
+services:
+  lighthouse:
+    image: nickc/lighthouse:latest
+    container_name: lighthouse
+    stdin_open: true
+    networks:
+      default:
+        ipv4_address: 172.22.144.2
+  trackingservice:
+    image: nickc/trackingservice:latest
+    container_name: trackingservice
+    stdin_open: true
+  crawlservice:
+    image: nickc/crawlservice:latest
+	container_name: crawlservice_1
+	stdin_open: true
+networks:
+  default:
+    external:
+      name: nat
