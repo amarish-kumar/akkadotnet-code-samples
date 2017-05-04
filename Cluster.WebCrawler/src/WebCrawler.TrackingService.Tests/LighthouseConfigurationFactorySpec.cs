@@ -12,16 +12,17 @@ using Akka.Configuration.Hocon;
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
+using WebCrawler.Bootstrapper;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace WebCrawler.TrackingService.Tests
 {
-    public class TrackerServiceFactorySpec
+    public class LighthouseConfigurationFactorySpec
     {
         private readonly ITestOutputHelper _output;
 
-        public TrackerServiceFactorySpec(ITestOutputHelper output)
+        public LighthouseConfigurationFactorySpec(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -32,7 +33,7 @@ namespace WebCrawler.TrackingService.Tests
             Config config =
                 ConfigurationFactory.ParseString(
                     @"akka.cluster.seed-nodes = [""akka.tcp://webcrawler@172.22.144.2:4053""]");
-            var ip = TrackerServiceFactory.GetSelfIpDiscoveryUri(config).ToString();
+            var ip = LighthouseConfigurationFactory.GetSelfIpDiscoveryUri(config).ToString();
             ip.Should().Be("http://172.22.144.2:9000/api/whatsmyip");
         }
 
@@ -45,7 +46,7 @@ namespace WebCrawler.TrackingService.Tests
             mockHandler.SetupGetStringAsync(selfIpAddressUri, "http://172.22.144.3:12345");
             HttpClient client = new HttpClient(mockHandler.Object);
 
-            var selfIpResponse = TrackerServiceFactory.GetSelfIpAddress(client, selfIpAddressUri);
+            var selfIpResponse = LighthouseConfigurationFactory.GetSelfIpAddress(client, selfIpAddressUri);
             selfIpResponse.Should().Be("http://172.22.144.3:12345");
         }
 
@@ -54,11 +55,11 @@ namespace WebCrawler.TrackingService.Tests
         {
             var selfIpAddress = "http://172.22.144.3:12345";
 
-            var remoteConfig = TrackerServiceFactory.CreateRemoteConfig(selfIpAddress);
+            var remoteConfig = LighthouseConfigurationFactory.CreateRemoteConfig(selfIpAddress);
             remoteConfig.ToString().Should().Be(@"{
   akka : {
     remote : {
-      helios : {
+      dot-netty : {
         tcp : {
           public-hostname : 172.22.144.3
           port : 12345

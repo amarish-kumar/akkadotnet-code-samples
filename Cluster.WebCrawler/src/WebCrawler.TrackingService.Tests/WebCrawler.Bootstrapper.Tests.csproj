@@ -7,8 +7,8 @@
     <ProjectGuid>{EA5B540D-D698-431C-805C-3EF54BC5BA26}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebCrawler.TrackingService.Tests</RootNamespace>
-    <AssemblyName>WebCrawler.TrackingService.Tests</AssemblyName>
+    <RootNamespace>WebCrawler.Bootstrapper.Tests</RootNamespace>
+    <AssemblyName>WebCrawler.Bootstrapper.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -94,16 +94,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrackerServiceFactorySpec.cs" />
+    <Compile Include="LighthouseConfigurationFactorySpec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebCrawler.Service\WebCrawler.TrackingService.csproj">
-      <Project>{2dee00d3-5706-4534-b5cf-6e85d576701c}</Project>
-      <Name>WebCrawler.TrackingService</Name>
+    <ProjectReference Include="..\WebCrawler.Bootstrapper\WebCrawler.Bootstrapper.csproj">
+      <Project>{9e9ea490-181d-4669-922b-affc9ec92128}</Project>
+      <Name>WebCrawler.Bootstrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

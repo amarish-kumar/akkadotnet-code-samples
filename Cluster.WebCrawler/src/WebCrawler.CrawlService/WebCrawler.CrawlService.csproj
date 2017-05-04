@@ -92,6 +92,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WebCrawler.Bootstrapper\WebCrawler.Bootstrapper.csproj">
+      <Project>{9e9ea490-181d-4669-922b-affc9ec92128}</Project>
+      <Name>WebCrawler.Bootstrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebCrawler.Messages\WebCrawler.Shared.csproj">
       <Project>{8a2a881e-63ac-4292-89b7-473ffbfd0f99}</Project>
       <Name>WebCrawler.Shared</Name>
