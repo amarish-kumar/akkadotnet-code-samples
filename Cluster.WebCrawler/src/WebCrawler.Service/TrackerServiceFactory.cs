@@ -38,8 +38,8 @@ namespace WebCrawler.TrackingService
             var selfPort = selfAddressUri.Port;
 
             var remoteConfig =
-                ConfigurationFactory.ParseString($@"akka.remote.helios.tcp.public-hostname = ""{selfIp}""
-                                                 akka.remote.helios.tcp.port = {selfPort}");
+                ConfigurationFactory.ParseString($@"akka.remote.dot-netty.tcp.public-hostname = ""{selfIp}""
+                                                 akka.remote.dot-netty.tcp.port = {selfPort}");
             return remoteConfig;
         }
 
